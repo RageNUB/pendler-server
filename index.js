@@ -33,11 +33,12 @@ const sendDriverMail = (driver) => {
         subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
         html: `
-        <h4>Hello ${driver.fullName}</h4>
-        <p>Thank you for registering with Pendler as a User. This is an acknowledgment mail to notify about the details received. You will be shared with all the details periodically.</p>
+        <p>Hello <b>${driver.fullName}</b>,</p>
+        <p>Thank you for registering with Pendler as a Driver. This is an acknowledgment mail to notify about the details received. You will be shared with all the details periodically.</p>
         <p>Keep yourself tuned for the official release. Join us in adding impact to the Pendler community with extra loaded benefits / perks. Stay safe.</p>
-        <p>Do let us know in case you need any further assistance.</p>
-        <P>Regards, <br/>PendlerCommunity <br/>A Ride Sharing Platform</P>
+        <p>Do let us know in case you need any further assistance. <br/><br/></p>
+
+        <p>Regards, <br/>PendlerCommunity <br/>A Ride Sharing Platform</p>
         `, // html body
     }, function (error, info) {
         if (error) {
@@ -55,11 +56,12 @@ const sendUserMail = (user) => {
         subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
         html: `
-        <h4>Hello ${user.fullName}</h4>
+        <p>Hello <b>${user.fullName}</b>,</p>
         <p>Thank you for registering with Pendler as a User. This is an acknowledgment mail to notify about the details received. You will be shared with all the details periodically.</p>
         <p>Keep yourself tuned for the official release. Join us in adding impact to the Pendler community with extra loaded benefits / perks. Stay safe.</p>
-        <p>Do let us know in case you need any further assistance.</p>
-        <P>Regards, <br/>PendlerCommunity <br/>A Ride Sharing Platform</P>
+        <p>Do let us know in case you need any further assistance. <br/><br/></p>
+
+        <p>Regards, <br/>PendlerCommunity <br/>A Ride Sharing Platform</p>
         `, // html body
     }, function (error, info) {
         if (error) {
@@ -71,7 +73,7 @@ const sendUserMail = (user) => {
 }
 
 
-const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@ac-lkphvzo-shard-00-00.dysamrx.mongodb.net:27017,ac-lkphvzo-shard-00-01.dysamrx.mongodb.net:27017,ac-lkphvzo-shard-00-02.dysamrx.mongodb.net:27017/?ssl=true&replicaSet=atlas-11u6ye-shard-0&authSource=admin&retryWrites=true&w=majority`;
+const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@ac-jmvjgjo-shard-00-00.c4octux.mongodb.net:27017,ac-jmvjgjo-shard-00-01.c4octux.mongodb.net:27017,ac-jmvjgjo-shard-00-02.c4octux.mongodb.net:27017/?ssl=true&replicaSet=atlas-t007ct-shard-0&authSource=admin&retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
