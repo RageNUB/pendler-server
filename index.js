@@ -3,6 +3,7 @@ const cors = require('cors');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const nodemailer = require("nodemailer");
+const mg = require('nodemailer-mailgun-transport');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -26,9 +27,18 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+// const auth = {
+//     auth: {
+//         api_key: process.env.EAMIL_API_KEY,
+//         domain: process.env.EMAIL_DOMAIN
+//     }
+// }
+
+// const transporter = nodemailer.createTransport(mg(auth));
+
 const sendDriverMail = (driver) => {
     transporter.sendMail({
-        from: "calciteX@pendler.co.in", // verified sender email
+        from: "calcitex@pendler.co.in", // verified sender email
         to: driver.email, // recipient email
         subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
@@ -51,7 +61,7 @@ const sendDriverMail = (driver) => {
 
 const sendUserMail = (user) => {
     transporter.sendMail({
-        from: "calciteX@pendler.co.in", // verified sender email
+        from: "calcitex@pendler.co.in", // verified sender email
         to: user.email, // recipient email
         subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
@@ -93,21 +103,21 @@ async function run() {
         const driversCollection = client.db("pendler").collection("driversCollection")
         const queriesCollection = client.db("pendler").collection("queriesCollection")
 
-        app.post("/drivers", async(req, res) => {
+        app.post("/drivers", async (req, res) => {
             const driver = req.body;
             sendDriverMail(driver);
             const result = await driversCollection.insertOne(driver)
             res.send(result)
         })
 
-        app.post("/users", async(req, res) => {
+        app.post("/users", async (req, res) => {
             const user = req.body;
             sendUserMail(user)
             const result = await usersCollection.insertOne(user)
             res.send(result)
         })
 
-        app.post("/queries", async(req, res) => {
+        app.post("/queries", async (req, res) => {
             const queries = req.body;
             const result = await queriesCollection.insertOne(queries)
             res.send(result)
