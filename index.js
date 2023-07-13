@@ -33,8 +33,11 @@ const sendDriverMail = (driver) => {
         subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
         html: `
-            <h3>Hello ${driver.fullName}, Thank You for choosing Pendler</h3>
-            <p>Your Early Bird registration has been conifrmed</p>
+        <h4>Hello ${driver.fullName}</h4>
+        <p>Thank you for registering with Pendler as a User. This is an acknowledgment mail to notify about the details received. You will be shared with all the details periodically.</p>
+        <p>Keep yourself tuned for the official release. Join us in adding impact to the Pendler community with extra loaded benefits / perks. Stay safe.</p>
+        <p>Do let us know in case you need any further assistance.</p>
+        <P>Regards, <br/>PendlerCommunity <br/>A Ride Sharing Platform</P>
         `, // html body
     }, function (error, info) {
         if (error) {
@@ -52,9 +55,12 @@ const sendUserMail = (user) => {
         subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
         html: `
-        <h3>Hello ${user.fullName}, Thank You for choosing Pendler</h3>
-        <p>Your Early Bird registration has been conifrmed</p>
-    `, // html body
+        <h4>Hello ${user.fullName}</h4>
+        <p>Thank you for registering with Pendler as a User. This is an acknowledgment mail to notify about the details received. You will be shared with all the details periodically.</p>
+        <p>Keep yourself tuned for the official release. Join us in adding impact to the Pendler community with extra loaded benefits / perks. Stay safe.</p>
+        <p>Do let us know in case you need any further assistance.</p>
+        <P>Regards, <br/>PendlerCommunity <br/>A Ride Sharing Platform</P>
+        `, // html body
     }, function (error, info) {
         if (error) {
             console.log(error);
