@@ -47,11 +47,14 @@ const sendDriverMail = (driver) => {
 
 const sendUserMail = (user) => {
     transporter.sendMail({
-        from: "SENDER_EMAIL", // verified sender email
-        to: "RECIPIENT_EMAIL", // recipient email
-        subject: "Test message subject", // Subject line
+        from: "calciteX@pendler.co.in", // verified sender email
+        to: user.email, // recipient email
+        subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
-        html: "<b>Hello world!</b>", // html body
+        html: `
+        <h3>Hello ${user.fullName}, Thank You for choosing Pendler</h3>
+        <p>Your Early Bird registration has been conifrmed</p>
+    `, // html body
     }, function (error, info) {
         if (error) {
             console.log(error);
@@ -91,6 +94,7 @@ async function run() {
 
         app.post("/users", async(req, res) => {
             const user = req.body;
+            sendUserMail(user)
             const result = await usersCollection.insertOne(user)
             res.send(result)
         })
