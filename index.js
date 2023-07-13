@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion } = require('mongodb');
+const nodemailer = require("nodemailer");
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -14,29 +15,99 @@ app.use(cors(corsConfig))
 app.options("", cors(corsConfig))
 app.use(express.json());
 
+const transporter = nodemailer.createTransport({
+    host: "smtp.zoho.in",
+    port: 465,
+    secure: true,
+    auth: {
+        // TODO: replace `user` and `pass` values from <https://forwardemail.net>
+        user: process.env.ZOHO_USERNAME,
+        pass: process.env.ZOHO_PASS
+    }
+});
+
+const sendDriverMail = (driver) => {
+    transporter.sendMail({
+        from: "calciteX@pendler.co.in", // verified sender email
+        to: driver.email, // recipient email
+        subject: "Your Early Bird Registration successful", // Subject line
+        text: "Hello world!", // plain text body
+        html: `
+            <h3>Hello ${driver.fullName}, Thank You for choosing Pendler</h3>
+            <p>Your Early Bird registration has been conifrmed</p>
+        `, // html body
+    }, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
+const sendUserMail = (user) => {
+    transporter.sendMail({
+        from: "SENDER_EMAIL", // verified sender email
+        to: "RECIPIENT_EMAIL", // recipient email
+        subject: "Test message subject", // Subject line
+        text: "Hello world!", // plain text body
+        html: "<b>Hello world!</b>", // html body
+    }, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
 
 const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@ac-lkphvzo-shard-00-00.dysamrx.mongodb.net:27017,ac-lkphvzo-shard-00-01.dysamrx.mongodb.net:27017,ac-lkphvzo-shard-00-02.dysamrx.mongodb.net:27017/?ssl=true&replicaSet=atlas-11u6ye-shard-0&authSource=admin&retryWrites=true&w=majority`;
 
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
-  serverApi: {
-    version: ServerApiVersion.v1,
-    strict: true,
-    deprecationErrors: true,
-  }
+    serverApi: {
+        version: ServerApiVersion.v1,
+        strict: true,
+        deprecationErrors: true,
+    }
 });
 
 async function run() {
-  try {
-    // Connect the client to the server	(optional starting in v4.7)
-    // await client.connect();
-    // Send a ping to confirm a successful connection
-    await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
-  } finally {
-    // Ensures that the client will close when you finish/error
-    // await client.close();
-  }
+    try {
+        // Connect the client to the server	(optional starting in v4.7)
+        // await client.connect();
+
+        const usersCollection = client.db("pendler").collection("usersCollection")
+        const driversCollection = client.db("pendler").collection("driversCollection")
+        const queriesCollection = client.db("pendler").collection("queriesCollection")
+
+        app.post("/drivers", async(req, res) => {
+            const driver = req.body;
+            sendDriverMail(driver);
+            const result = await driversCollection.insertOne(driver)
+            res.send(result)
+        })
+
+        app.post("/users", async(req, res) => {
+            const user = req.body;
+            const result = await usersCollection.insertOne(user)
+            res.send(result)
+        })
+
+        app.post("/queries", async(req, res) => {
+            const queries = req.body;
+            const result = await queriesCollection.insertOne(queries)
+            res.send(result)
+        })
+
+        // Send a ping to confirm a successful connection
+        await client.db("admin").command({ ping: 1 });
+        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    } finally {
+        // Ensures that the client will close when you finish/error
+        // await client.close();
+    }
 }
 run().catch(console.dir);
 
