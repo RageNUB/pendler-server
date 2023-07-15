@@ -3,7 +3,6 @@ const cors = require('cors');
 require('dotenv').config()
 const { MongoClient, ServerApiVersion } = require('mongodb');
 const nodemailer = require("nodemailer");
-const mg = require('nodemailer-mailgun-transport');
 const app = express();
 const port = process.env.PORT || 5000;
 
@@ -21,20 +20,11 @@ const transporter = nodemailer.createTransport({
     port: 465,
     secure: true,
     auth: {
-        // TODO: replace `user` and `pass` values from <https://forwardemail.net>
         user: process.env.ZOHO_USERNAME,
         pass: process.env.ZOHO_PASS
     }
 });
 
-// const auth = {
-//     auth: {
-//         api_key: process.env.EAMIL_API_KEY,
-//         domain: process.env.EMAIL_DOMAIN
-//     }
-// }
-
-// const transporter = nodemailer.createTransport(mg(auth));
 
 const sendDriverMail = (driver) => {
     transporter.sendMail({
@@ -82,6 +72,29 @@ const sendUserMail = (user) => {
     });
 }
 
+const sendOperatorMail = (operator) => {
+    transporter.sendMail({
+        from: "calcitex@pendler.co.in", // verified sender email
+        to: user.email, // recipient email
+        subject: "Your Early Bird Registration successful", // Subject line
+        text: "Hello world!", // plain text body
+        html: `
+        <p>Hello <b>${user.fullName}</b>,</p>
+        <p>Thank you for registering with Pendler as a Operator. This is an acknowledgment mail to notify about the details received. You will be shared with all the details periodically.</p>
+        <p>Keep yourself tuned for the official release. Join us in adding impact to the Pendler community with extra loaded benefits / perks. Stay safe.</p>
+        <p>Do let us know in case you need any further assistance. <br/><br/></p>
+
+        <p>Regards, <br/>PendlerCommunity <br/>A Ride Sharing Platform</p>
+        `, // html body
+    }, function (error, info) {
+        if (error) {
+            console.log(error);
+        } else {
+            console.log('Email sent: ' + info.response);
+        }
+    });
+}
+
 
 const uri = `mongodb://${process.env.DB_USER}:${process.env.DB_PASS}@ac-jmvjgjo-shard-00-00.c4octux.mongodb.net:27017,ac-jmvjgjo-shard-00-01.c4octux.mongodb.net:27017,ac-jmvjgjo-shard-00-02.c4octux.mongodb.net:27017/?ssl=true&replicaSet=atlas-t007ct-shard-0&authSource=admin&retryWrites=true&w=majority`;
 
@@ -102,6 +115,7 @@ async function run() {
         const usersCollection = client.db("pendler").collection("usersCollection")
         const driversCollection = client.db("pendler").collection("driversCollection")
         const queriesCollection = client.db("pendler").collection("queriesCollection")
+        const operatorsCollection = client.db("pendler").collection("operatorsCollection")
 
         app.post("/drivers", async (req, res) => {
             const driver = req.body;
@@ -120,6 +134,13 @@ async function run() {
         app.post("/queries", async (req, res) => {
             const queries = req.body;
             const result = await queriesCollection.insertOne(queries)
+            res.send(result)
+        })
+
+        app.post("/operators", async (req, res) => {
+            const operator = req.body;
+            sendOperatorMail(operator)
+            const result = await operatorsCollection.insertOne(operator)
             res.send(result)
         })
 
