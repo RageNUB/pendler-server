@@ -13,6 +13,7 @@ const corsConfig = {
 }
 app.use(cors(corsConfig))
 app.options("", cors(corsConfig))
+// app.use(cors());
 app.use(express.json());
 
 const transporter = nodemailer.createTransport({
@@ -75,11 +76,11 @@ const sendUserMail = (user) => {
 const sendOperatorMail = (operator) => {
     transporter.sendMail({
         from: "calcitex@pendler.co.in", // verified sender email
-        to: user.email, // recipient email
+        to: operator.email, // recipient email
         subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
         html: `
-        <p>Hello <b>${user.fullName}</b>,</p>
+        <p>Hello <b>${operator.fullName}</b>,</p>
         <p>Thank you for registering with Pendler as a Operator. This is an acknowledgment mail to notify about the details received. You will be shared with all the details periodically.</p>
         <p>Keep yourself tuned for the official release. Join us in adding impact to the Pendler community with extra loaded benefits / perks. Stay safe.</p>
         <p>Do let us know in case you need any further assistance. <br/><br/></p>
