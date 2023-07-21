@@ -29,7 +29,7 @@ const transporter = nodemailer.createTransport({
 
 const sendDriverMail = (driver) => {
     transporter.sendMail({
-        from: "calcitex@pendler.co.in", // verified sender email
+        from: "support@pendler.co.in", // verified sender email
         to: driver.email, // recipient email
         subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
@@ -45,14 +45,14 @@ const sendDriverMail = (driver) => {
         if (error) {
             console.log(error);
         } else {
-            console.log('Email sent: ' + info.response);
+            // console.log('Email sent: ' + info.response);
         }
     });
 }
 
 const sendUserMail = (user) => {
     transporter.sendMail({
-        from: "calcitex@pendler.co.in", // verified sender email
+        from: "support@pendler.co.in", // verified sender email
         to: user.email, // recipient email
         subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
@@ -68,14 +68,14 @@ const sendUserMail = (user) => {
         if (error) {
             console.log(error);
         } else {
-            console.log('Email sent: ' + info.response);
+            // console.log('Email sent: ' + info.response);
         }
     });
 }
 
 const sendOperatorMail = (operator) => {
     transporter.sendMail({
-        from: "calcitex@pendler.co.in", // verified sender email
+        from: "support@pendler.co.in", // verified sender email
         to: operator.email, // recipient email
         subject: "Your Early Bird Registration successful", // Subject line
         text: "Hello world!", // plain text body
@@ -91,7 +91,7 @@ const sendOperatorMail = (operator) => {
         if (error) {
             console.log(error);
         } else {
-            console.log('Email sent: ' + info.response);
+            // console.log('Email sent: ' + info.response);
         }
     });
 }
